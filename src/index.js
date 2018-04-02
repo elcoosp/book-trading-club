@@ -8,11 +8,17 @@ const express = require('express'),
   dotenv = require('dotenv').config(),
   to = require('await-to-js').to,
   // App modules and constants
-  { MONGODB_URI } = process.env,
+  { MONGODB_URI, PORT } = process.env,
   userRoutes = require('./routes/user'),
   bookRoutes = require('./routes/book'),
   requestRoutes = require('./routes/request'),
   app = express()
+
+// Db connection
+mongoose
+  .connect(MONGODB_URI)
+  .then(() => console.log('coonnected to db'))
+  .catch(e => console.log(`DB ERROR : ${e}`))
 
 // App initialization
 app
@@ -21,13 +27,9 @@ app
   .use(mongoSanitize())
   .use(expressSanitizer())
   .use(helmet())
-  //Routes
-  .use('/books', bookRoutes)
-  .use('/users', userRoutes)
-  .use('/requests', requestRoutes)
-
-//Db connection
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => console.log('coonnected to db'))
-  .catch(e => console.log(`DB ERROR : ${e}`))
+  // Routes
+  .use('api/books', bookRoutes)
+  .use('api/users', userRoutes)
+  .use('api/requests', requestRoutes)
+  // Listen
+  .listen(PORT, () => console.log(`Server running on port ${PORT}`))

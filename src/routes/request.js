@@ -1,4 +1,4 @@
-const router = require('express').Router,
+const router = require('express').Router(),
   {
     getAll,
     getOne,
@@ -11,7 +11,7 @@ router
   .get('/', getAll)
   .get('/:id', getOne)
   .post('/:id', addOne)
-  .update('/:id', updateOne)
+  .patch('/:id', updateOne)
   .delete('/:id', deleteOne)
 
 module.exports = router
