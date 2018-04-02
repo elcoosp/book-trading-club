@@ -1,19 +1,24 @@
 @ressource = users
 @id = 5ac2a48342a2a94ec51240b8
+
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib29rcyI6W10sIl9pZCI6IjVhYzJhY2IyN2Q5MWQyNTc2NmUwOWNhYSIsIm5hbWVGaXJzdCI6InRlc3QiLCJ1c2VybmFtZSI6InRlc3QiLCJuYW1lTGFzdCI6InRlc3QiLCJwYXNzd29yZCI6IjEyMyIsIl9fdiI6MCwiaWQiOiI1YWMyYWNiMjdkOTFkMjU3NjZlMDljYWEiLCJpYXQiOjE1MjI3MDg2MjJ9.EfopaHaN-RYmg6NXU7ONgV0-ZFvAEf3Vqrbu8_IrTOo
 GET http://localhost:5000/api/{{ressource}}
 
 ###
 GET http://localhost:5000/api/{{ressource}}/{{id}}
 
 ###
-# POST http://localhost:5000/api/{{ressource}}
-# Content-Type: application/json
+POST http://localhost:5000/api/{{ressource}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
 
-# {
-#   "name": "YDKJS",
-#   "cover": "http://some.imagee",
-#   "owner": "5ac23a4599d6f30e83d344be"s
-# }
+{
+  "nameFirst": "test",
+  "username": "test",
+  "nameLast": "test",
+  "password": "123"
+}
+
 
  ### 
 PATCH http://localhost:5000/api/{{ressource}}/{{id}}
@@ -24,3 +29,18 @@ Content-Type: application/json
 }
 ###
 DELETE http://localhost:5000/api/{{ressource}}/{{id}}
+
+# Book post
+# {
+#   "name": "YDKJS",
+#   "cover": "http://some.imagee",
+#   "owner": "5ac23a4599d6f30e83d344be"
+# }
+
+# User post
+# {
+#   "nameFirst": "test",
+#   "username": "test",
+#   "nameLast": "test",
+#   "password": "123"
+# }
