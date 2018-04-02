@@ -4,6 +4,7 @@ const to = require('await-to-js').to,
 module.exports = {
   async getAll(req, res) {
     const [e, books] = await to(Book.find())
+
     e
       ? res.status(404).json({
           error: 'No books found'
@@ -14,6 +15,7 @@ module.exports = {
   async getOne(req, res) {
     const { params: { id } } = req
     const [e, book] = await to(Book.findById(id))
+
     e
       ? res.status(404).json({
           error: 'No book found'
@@ -23,7 +25,6 @@ module.exports = {
 
   async addOne(req, res) {
     const { body } = req
-
     const [e, savedBook] = await to(new Book(body).save())
 
     e
@@ -35,20 +36,17 @@ module.exports = {
 
   async updateOne(req, res) {
     const { params: { id } } = req
-
     const [e, updatedBook] = await to(Book.findByIdAndUpdate(id))
-    console.log(e)
 
     e
       ? res.status(404).json({
           error: 'Book not updated'
         })
-      : res.json(updatedBook)
+      : res.status(200)
   },
 
   async deleteOne(req, res) {
     const { params: { id } } = req
-
     const [e, deleteResult] = await to(Book.findById(id).remove())
 
     e || deleteResult.n === 0
