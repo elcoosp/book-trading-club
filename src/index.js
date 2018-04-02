@@ -13,6 +13,7 @@ const express = require('express'),
   userRoutes = require('./routes/users'),
   bookRoutes = require('./routes/books'),
   requestRoutes = require('./routes/requests'),
+  authRoutes = require('./routes/auth'),
   app = express()
 
 // Db connection
@@ -20,6 +21,9 @@ mongoose
   .connect(MONGODB_URI)
   .then(() => console.log('coonnected to db'))
   .catch(e => console.log(`DB ERROR : ${e}`))
+
+// Passport local startegy
+require('./services/passport')
 
 // App initialization
 app
@@ -33,5 +37,6 @@ app
   .use('/api/books', bookRoutes)
   .use('/api/users', userRoutes)
   .use('/api/requests', requestRoutes)
+  .use('/api/auth', authRoutes)
   // Listen
   .listen(PORT, () => console.log(`Server running on port ${PORT}`))
