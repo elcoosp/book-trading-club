@@ -1,0 +1,26 @@
+{
+  "name": "book-trading-club",
+  "version": "1.0.0",
+  "description": "freeCodeCamp challenge book trading club",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "dev": "nodemon ./src/index.js",
+    "test": "jest --watch"
+  },
+  "keywords": [
+    "javascript"
+  ],
+  "author": "elcoosp",
+  "license": "MIT",
+  "dependencies": {
+    "await-to-js": "2.0.1",
+    "dotenv": "5.0.1",
+    "express": "4.16.3",
+    "mongoose": "5.0.12",
+    "mongoose-type-url": "1.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  }
+}
