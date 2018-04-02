@@ -4,11 +4,13 @@ const mongoose = require('mongoose'),
 
 const UserSchema = new Schema({
   nameFirst: { type: String, required: true },
+  username: { type: String, required: true },
   nameLast: { type: String, required: true },
   password: { type: String, required: true, private: true },
   books: [{ type: Schema.Types.ObjectId, ref: 'Book' }]
 })
 
+UserSchema.set('toJSON', { virtuals: true })
 const UserModel = mongoose.model('User', UserSchema)
 
 module.exports = UserModel
