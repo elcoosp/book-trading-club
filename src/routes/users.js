@@ -5,12 +5,12 @@ const router = require('express').Router(),
     addOne,
     updateOne,
     deleteOne
-  } = require('../controllers/request')
+  } = require('../controllers/user')
 
 router
   .get('/', getAll)
+  .post('/', addOne)
   .get('/:id', getOne)
-  .post('/:id', addOne)
   .patch('/:id', updateOne)
   .delete('/:id', deleteOne)
 
