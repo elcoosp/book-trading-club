@@ -9,8 +9,9 @@ const express = require('express'),
   to = require('await-to-js').to,
   // App modules and constants
   { MONGODB_URI } = process.env,
-  User = require('./models/User'),
-  Book = require('./models/Book'),
+  userRoutes = require('./routes/user'),
+  bookRoutes = require('./routes/book'),
+  requestRoutes = require('./routes/request'),
   app = express()
 
 // App initialization
@@ -20,6 +21,10 @@ app
   .use(mongoSanitize())
   .use(expressSanitizer())
   .use(helmet())
+  //Routes
+  .use('/books', bookRoutes)
+  .use('/users', userRoutes)
+  .use('/requests', requestRoutes)
 
 //Db connection
 mongoose
