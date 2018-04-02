@@ -1,4 +1,5 @@
 const router = require('express').Router(),
+  passport = require('passport'),
   {
     getAll,
     getOne,
@@ -9,9 +10,9 @@ const router = require('express').Router(),
 
 router
   .get('/', getAll)
-  .post('/', addOne)
   .get('/:id', getOne)
-  .patch('/:id', updateOne)
-  .delete('/:id', deleteOne)
+  .post('/', passport.authenticate('jwt', { session: false }), addOne)
+  .patch('/:id', passport.authenticate('jwt', { session: false }), updateOne)
+  .delete('/:id', passport.authenticate('jwt', { session: false }), deleteOne)
 
 module.exports = router
