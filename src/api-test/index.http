@@ -1,34 +1,40 @@
 @ressource = users
-@id = 5ac2a48342a2a94ec51240b8
+@id = 5ac37cb389c29431107aa95c
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib29rcyI6W10sIl9pZCI6IjVhYzJhY2IyN2Q5MWQyNTc2NmUwOWNhYSIsIm5hbWVGaXJzdCI6InRlc3QiLCJ1c2VybmFtZSI6InRlc3QiLCJuYW1lTGFzdCI6InRlc3QiLCJwYXNzd29yZCI6IjEyMyIsIl9fdiI6MCwiaWQiOiI1YWMyYWNiMjdkOTFkMjU3NjZlMDljYWEiLCJpYXQiOjE1MjI3MDg2MjJ9.EfopaHaN-RYmg6NXU7ONgV0-ZFvAEf3Vqrbu8_IrTOo
-GET http://localhost:5000/api/{{ressource}}
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJib29rcyI6W10sIl9pZCI6IjVhYzM3YzliODljMjk0MzExMDdhYTk1OCIsIm5hbWVGaXJzdCI6InRlc3QiLCJ1c2VybmFtZSI6InRlc3QiLCJuYW1lTGFzdCI6InRlc3QiLCJwYXNzd29yZCI6IiQyYSQxMCRmWHdISi5KeWZHdkJYUXlMdnRiVjhPQ01NaERKLkUxTWFCLmpYU3VVTUZSU1BIaHQ2aG1jRyIsIl9fdiI6MCwiaWQiOiI1YWMzN2M5Yjg5YzI5NDMxMTA3YWE5NTgiLCJpYXQiOjE1MjI3NjA4OTV9.3Wv43aMYVl0NK3B6-_H4xODw4PnQAxsWw38gGfkt8v4
+###
+GET http://localhost:5000/api/{{ressource}}/
 
 ###
 GET http://localhost:5000/api/{{ressource}}/{{id}}
 
 ###
-POST http://localhost:5000/api/{{ressource}}
-Content-Type: application/json
-Authorization: Bearer {{token}}
+# POST http://localhost:5000/api/{{ressource}}
+# Content-Type: application/json
+# Authorization: Bearer {{token}}
 
-{
-  "nameFirst": "test",
-  "username": "test",
-  "nameLast": "test",
-  "password": "123"
-}
+# {
+#   "nameFirst": "test2",
+#   "username": "test2",
+#   "nameLast": "test",
+#   "password": "123"
+# }
 
 
  ### 
 PATCH http://localhost:5000/api/{{ressource}}/{{id}}
 Content-Type: application/json
+Authorization: Bearer {{token}}
+
 
 {
-  "name": "YDKJSSSSSSS"
+  "nameFirst": "test",
+  "username": "test",
+  "nameLast": "fsd"
 }
 ###
 DELETE http://localhost:5000/api/{{ressource}}/{{id}}
+Authorization: Bearer {{token}}
 
 # Book post
 # {
