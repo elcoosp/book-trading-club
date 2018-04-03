@@ -1,6 +1,7 @@
 const to = require('await-to-js').to,
   User = require('../models/User'),
-  pick = require('object.pick')
+  pick = require('object.pick'),
+  bcrypt = require('bcrypt')
 
 const filterFields = body =>
   pick(body, ['nameFirst', 'username', 'nameLast', 'password'])
@@ -28,7 +29,18 @@ module.exports = {
   },
 
   async addOne(req, res) {
-    const [e, savedUser] = await to(new User(filterFields(req.body)).save())
+    const { body } = req
+
+    const [hashError, hash] = await to(bcrypt.hash(body.password, 10))
+    if (hashError)
+      return res.status(404).json({
+        error: 'User not created'
+      })
+
+    const newUser = Object.assign(filterFields(body), { password: hash })
+    console.log(newUser)
+
+    const [e, savedUser] = await to(new User(newUser).save())
 
     e
       ? res.status(404).json({

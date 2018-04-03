@@ -7,7 +7,7 @@ const UserSchema = new Schema({
   nameFirst: { type: String, required: true },
   username: { type: String, required: true, unique: true },
   nameLast: { type: String, required: true },
-  password: { type: String, required: true, private: true },
+  password: { type: String, required: true, private: true, maxlength: 60 },
   books: [{ type: Schema.Types.ObjectId, ref: 'Book' }]
 })
 
