@@ -1,5 +1,6 @@
 const router = require('express').Router(),
   passport = require('passport'),
+  checkAuth = require('../middlewares/checkAuth'),
   {
     getAll,
     getOne,
@@ -12,7 +13,17 @@ router
   .get('/', getAll)
   .get('/:id', getOne)
   .post('/', addOne)
-  .patch('/:id', passport.authenticate('jwt', { session: false }), updateOne)
-  .delete('/:id', passport.authenticate('jwt', { session: false }), deleteOne)
+  .patch(
+    '/:id',
+    passport.authenticate('jwt', { session: false }),
+    checkAuth,
+    updateOne
+  )
+  .delete(
+    '/:id',
+    passport.authenticate('jwt', { session: false }),
+    checkAuth,
+    deleteOne
+  )
 
 module.exports = router

@@ -38,7 +38,6 @@ module.exports = {
       })
 
     const newUser = Object.assign(filterFields(body), { password: hash })
-    console.log(newUser)
 
     const [e, savedUser] = await to(new User(newUser).save())
 
@@ -51,6 +50,7 @@ module.exports = {
 
   async updateOne(req, res) {
     const { params: { id }, body } = req
+
     const [e, updatedUser] = await to(
       User.findByIdAndUpdate(id, filterFields(body), {
         runValidators: true,
@@ -73,6 +73,8 @@ module.exports = {
       ? res.status(404).json({
           error: 'User not deleted'
         })
-      : res.status(200)
+      : res.status(200).json({
+          success: 'User deleted'
+        })
   }
 }

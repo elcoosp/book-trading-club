@@ -7,7 +7,6 @@ const express = require('express'),
   helmet = require('helmet'),
   morgan = require('morgan'),
   expressSanitizer = require('express-sanitizer'),
-  to = require('await-to-js').to,
   // App modules and constants
   { MONGODB_URI, PORT } = process.env,
   userRoutes = require('./routes/users'),
@@ -19,7 +18,7 @@ const express = require('express'),
 // Db connection
 mongoose
   .connect(MONGODB_URI)
-  .then(() => console.log('coonnected to db'))
+  .then(() => console.log('Connected to db'))
   .catch(e => console.log(`DB ERROR : ${e}`))
 
 // Passport local startegy
