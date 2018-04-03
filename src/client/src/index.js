@@ -1,13 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Controller from './controller'
+import controller from './modules/controller'
 import { Container } from '@cerebral/react'
-import App from './components/App'
 import registerServiceWorker from './registerServiceWorker'
+import { BrowserRouter } from 'react-router-dom'
+import 'antd/dist/antd.css'
+import App from './components/App'
 
 ReactDOM.render(
   <Container controller={controller}>
-    <App />
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </Container>,
   document.getElementById('root')
 )
