@@ -30,6 +30,7 @@ class App extends Component {
             </Fragment>
           )}
           <Route path="/signin" component={SignIn} />
+          <Route component={Home} />
         </Switch>
       </div>
     )
