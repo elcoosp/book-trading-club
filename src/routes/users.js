@@ -11,7 +11,7 @@ const router = require('express').Router(),
 router
   .get('/', getAll)
   .get('/:id', getOne)
-  .post('/', passport.authenticate('jwt', { session: false }), addOne)
+  .post('/', addOne)
   .patch('/:id', passport.authenticate('jwt', { session: false }), updateOne)
   .delete('/:id', passport.authenticate('jwt', { session: false }), deleteOne)
 

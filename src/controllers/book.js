@@ -1,5 +1,8 @@
 const to = require('await-to-js').to,
-  Book = require('../models/Book')
+  Book = require('../models/Book'),
+  pick = require('object.pick')
+
+const filterFields = body => pick(body, ['name', 'cover'])
 
 module.exports = {
   async getAll(req, res) {
@@ -25,7 +28,7 @@ module.exports = {
 
   async addOne(req, res) {
     const { body } = req
-    const [e, savedBook] = await to(new Book(body).save())
+    const [e, savedBook] = await to(new Book(filterFields(body)).save())
 
     e
       ? res.status(404).json({
@@ -35,14 +38,19 @@ module.exports = {
   },
 
   async updateOne(req, res) {
-    const { params: { id } } = req
-    const [e, updatedBook] = await to(Book.findByIdAndUpdate(id))
+    const { params: { id }, body } = req
+    const [e, updatedBook] = await to(
+      Book.findByIdAndUpdate(id, filterFields(body), {
+        runValidators: true,
+        new: true
+      })
+    )
 
     e
       ? res.status(404).json({
           error: 'Book not updated'
         })
-      : res.status(200)
+      : res.json(updatedBook)
   },
 
   async deleteOne(req, res) {

@@ -1,5 +1,9 @@
 const to = require('await-to-js').to,
-  User = require('../models/User')
+  User = require('../models/User'),
+  pick = require('object.pick')
+
+const filterFields = body =>
+  pick(body, ['nameFirst', 'username', 'nameLast', 'password'])
 
 module.exports = {
   async getAll(req, res) {
@@ -24,8 +28,7 @@ module.exports = {
   },
 
   async addOne(req, res) {
-    const { body } = req
-    const [e, savedUser] = await to(new User(body).save())
+    const [e, savedUser] = await to(new User(filterFields(req.body)).save())
 
     e
       ? res.status(404).json({
@@ -35,14 +38,19 @@ module.exports = {
   },
 
   async updateOne(req, res) {
-    const { params: { id } } = req
-    const [e, updatedUser] = await to(User.findByIdAndUpdate(id))
+    const { params: { id }, body } = req
+    const [e, updatedUser] = await to(
+      User.findByIdAndUpdate(id, filterFields(body), {
+        runValidators: true,
+        new: true
+      })
+    )
 
     e
       ? res.status(404).json({
           error: 'User not updated'
         })
-      : res.status(200)
+      : res.json(updatedUser)
   },
 
   async deleteOne(req, res) {
