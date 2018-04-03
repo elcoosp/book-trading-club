@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from '@cerebral/react'
 import { state, signal } from 'cerebral/tags'
 import { Route, withRouter, Switch } from 'react-router'
@@ -16,14 +16,19 @@ class App extends Component {
 
   render() {
     const { isAuthenticated } = this.props
+
     return (
       <div>
         <Navigation />
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/mybooks" component={MyBooks} />
-          <Route path="/requests" component={Requests} />
-          {isAuthenticated && <Route path="/settings" component={Settings} />}
+          {isAuthenticated && (
+            <Fragment>
+              <Route path="/settings" component={Settings} />{' '}
+              <Route path="/mybooks" component={MyBooks} />
+              <Route path="/requests" component={Requests} />)}
+            </Fragment>
+          )}
           <Route path="/signin" component={SignIn} />
         </Switch>
       </div>
