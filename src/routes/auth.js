@@ -3,7 +3,18 @@ const express = require('express'),
   jwt = require('jsonwebtoken'),
   passport = require('passport'),
   filter = require('../filters'),
+  to = require('await-to-js').to,
   { JWT_TOKEN } = process.env
+
+router.get(
+  '/me',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    req.user
+      ? res.json({ user: filter.user.sended(req.user) })
+      : res.status(401).json({ error: 'Not auuthorized' })
+  }
+)
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
