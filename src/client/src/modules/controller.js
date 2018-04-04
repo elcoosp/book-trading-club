@@ -1,5 +1,6 @@
 import { Controller, Module } from 'cerebral'
-import { initialize } from './sequences'
+import { initialize, login, logout } from './sequences'
+import HttpProvider from '@cerebral/http'
 import Devtools from 'cerebral/devtools'
 
 let devtools = null
@@ -14,11 +15,20 @@ const app = Module({
   state: {
     auth: {
       isAuthenticated: false,
-      token: null
+      token: null,
+      user: null
+    },
+    errors: {
+      user: null
     }
   },
   signals: {
-    initialize
+    initialize,
+    login,
+    logout
+  },
+  providers: {
+    http: HttpProvider()
   }
 })
 

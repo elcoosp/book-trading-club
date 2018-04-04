@@ -8,11 +8,11 @@ import 'antd/dist/antd.css'
 import App from './components/App'
 
 ReactDOM.render(
-  <Container controller={controller}>
-    <BrowserRouter>
+  <BrowserRouter>
+    <Container controller={controller}>
       <App />
-    </BrowserRouter>
-  </Container>,
+    </Container>
+  </BrowserRouter>,
   document.getElementById('root')
 )
 registerServiceWorker()

@@ -1,4 +1,7 @@
 import React, { Fragment } from 'react'
+import { connect } from '@cerebral/react'
+import { signal } from 'cerebral/tags'
+
 import { Form, Icon, Input, Button, Checkbox } from 'antd'
 const FormItem = Form.Item
 
@@ -7,10 +10,13 @@ class SignInForm extends React.Component {
     isLogin: true
   }
   handleSubmit = e => {
+    const { form, _login, _register } = this.props
     e.preventDefault()
-    this.props.form.validateFields((err, values) => {
+    form.validateFields((err, formData) => {
       if (!err) {
-        console.log('Signin form values: ', values)
+        this.state.isLogin
+          ? _login({ loginForm: formData })
+          : _register({ registerForm: formData })
       }
     })
   }
@@ -23,6 +29,7 @@ class SignInForm extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form
     const { isLogin } = this.state
+
     return (
       <Form onSubmit={this.handleSubmit}>
         {!isLogin && (
@@ -45,7 +52,7 @@ class SignInForm extends React.Component {
         )}
 
         <FormItem>
-          {getFieldDecorator('userName', {
+          {getFieldDecorator('username', {
             rules: [{ required: true, message: 'Please enter your username' }]
           })(
             <Input
@@ -81,4 +88,10 @@ class SignInForm extends React.Component {
 
 const SignIn = Form.create()(SignInForm)
 
-export default SignIn
+export default connect(
+  {
+    _login: signal`login`,
+    _register: signal`register`
+  },
+  SignIn
+)

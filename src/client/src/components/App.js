@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { connect } from '@cerebral/react'
 import { state, signal } from 'cerebral/tags'
-import { Route, withRouter, Switch } from 'react-router'
+import { Route, withRouter } from 'react-router'
 import Home from './Home'
 import MyBooks from './MyBooks'
 import Requests from './Requests'
@@ -11,7 +11,7 @@ import SignIn from './SignIn'
 
 class App extends Component {
   componentDidMount = () => {
-    this.props.initialize()
+    this.props._initialize()
   }
 
   render() {
@@ -20,18 +20,15 @@ class App extends Component {
     return (
       <div>
         <Navigation />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          {isAuthenticated && (
-            <Fragment>
-              <Route path="/settings" component={Settings} />{' '}
-              <Route path="/mybooks" component={MyBooks} />
-              <Route path="/requests" component={Requests} />)}
-            </Fragment>
-          )}
-          <Route path="/signin" component={SignIn} />
-          <Route component={Home} />
-        </Switch>
+        <Route exact path="/" component={Home} />
+        {isAuthenticated && (
+          <Fragment>
+            <Route path="/settings" component={Settings} />
+            <Route path="/mybooks" component={MyBooks} />
+            <Route path="/requests" component={Requests} />
+          </Fragment>
+        )}
+        <Route path="/signin" component={SignIn} />
       </div>
     )
   }
@@ -40,7 +37,7 @@ class App extends Component {
 export default withRouter(
   connect(
     {
-      initialize: signal`initialize`,
+      _initialize: signal`initialize`,
       isAuthenticated: state`auth.isAuthenticated`
     },
     App

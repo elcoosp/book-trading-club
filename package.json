@@ -14,7 +14,7 @@
   "author": "elcoosp",
   "license": "MIT",
   "dependencies": {
-    "await-to-js": "2.0.1",
+    "await-to-js": "^2.0.1",
     "bcrypt": "1.0.3",
     "body-parser": "1.18.2",
     "dotenv": "5.0.1",
