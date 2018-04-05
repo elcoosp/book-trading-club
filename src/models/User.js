@@ -11,7 +11,6 @@ const UserSchema = new Schema({
   books: [{ type: Schema.Types.ObjectId, ref: 'Book' }]
 })
 
-UserSchema.set('toJSON', { virtuals: true })
 UserSchema.plugin(uniqueValidator)
 const UserModel = mongoose.model('User', UserSchema)
 

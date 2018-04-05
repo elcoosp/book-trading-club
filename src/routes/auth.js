@@ -27,7 +27,7 @@ router.post('/login', (req, res, next) => {
     req.login(user, { session: false }, err => {
       if (err) res.send(err)
 
-      const token = jwt.sign(user.toJSON(), JWT_TOKEN)
+      const token = jwt.sign(filter.user.sended(user), JWT_TOKEN)
 
       return res.json({ user: filter.user.sended(user), token })
     })
