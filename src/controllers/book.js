@@ -27,8 +27,12 @@ module.exports = {
   },
 
   async addOne(req, res) {
-    const { body } = req
-    const [e, savedBook] = await to(new Book(filterFields(body)).save())
+    const { body, user } = req
+
+    const [e, savedBook] = await to(
+      new Book({ ...filterFields(body.formData), owner: user.id }).save()
+    )
+    console.log(savedBook)
 
     e
       ? res.status(404).json({
