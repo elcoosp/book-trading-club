@@ -1,6 +1,7 @@
 const to = require('await-to-js').to,
-  Book = require('../models/Book'),
-  pick = require('object.pick')
+  axios = require('axios'),
+  pick = require('object.pick'),
+  Book = require('../models/Book')
 
 const filterFields = body => pick(body, ['name', 'cover'])
 
@@ -27,12 +28,23 @@ module.exports = {
   },
 
   async addOne(req, res) {
-    const { body, user } = req
+    const { body: { formData }, user } = req
+    // Grab a thumbnail from google API
+    const [booksApiError, matchingBooks] = await to(
+      axios.get(
+        `https://www.googleapis.com/books/v1/volumes?q=+intitle:${
+          formData.name
+        }`
+      )
+    )
+    const cover =
+      booksApiError || matchingBooks.data.totalItems === 0
+        ? 'https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg'
+        : matchingBooks.data.items[0].imageLinks.smallThumbnail
 
     const [e, savedBook] = await to(
-      new Book({ ...filterFields(body.formData), owner: user.id }).save()
+      new Book({ ...filterFields(formData), owner: user.id, cover }).save()
     )
-    console.log(savedBook)
 
     e
       ? res.status(404).json({
