@@ -19,12 +19,15 @@ export class AuthProvider extends Component {
                 isLoggedIn: true,
                 user: { name: 'SupaDupaUser' }
               })),
+
             logout: () =>
               state.isLoggedIn &&
               this.setState(s => ({
                 isLoggedIn: false,
                 user: null
-              }))
+              })),
+
+            register: () => console.log('registering')
           }
         }}
       >

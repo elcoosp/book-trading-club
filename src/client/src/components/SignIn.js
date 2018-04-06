@@ -1,43 +1,45 @@
 import React, { Fragment } from 'react'
-import { connect } from '@cerebral/react'
-import { signal } from 'cerebral/tags'
 import styled from 'styled-components'
 import { Form, Icon, Input, Button, Checkbox } from 'antd'
+import { withAuth } from '../context/Auth'
+
 const FormItem = Form.Item
 const FormWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
 `
+
 class SignInForm extends React.Component {
   state = {
-    isLogin: true
+    isLoginForm: true
   }
+
   handleSubmit = e => {
-    const { form, _login, _register } = this.props
+    const { form, auth } = this.props
     e.preventDefault()
     form.validateFields((err, formData) => {
       if (!err) {
-        this.state.isLogin
-          ? _login({ data: formData })
-          : _register({ data: formData })
+        this.state.isLoginForm
+          ? auth.A.login({ data: formData })
+          : auth.A.register({ data: formData })
       }
     })
   }
 
   toggleForm = () =>
     this.setState(prevState => ({
-      isLogin: prevState.isLogin ? false : true
+      isLoginForm: prevState.isLoginForm ? false : true
     }))
 
   render() {
     const { getFieldDecorator } = this.props.form
-    const { isLogin } = this.state
+    const { isLoginForm } = this.state
 
     return (
       <FormWrapper>
         <Form onSubmit={this.handleSubmit}>
-          {!isLogin && (
+          {!isLoginForm && (
             <Fragment>
               <FormItem>
                 {getFieldDecorator('nameFirst', {
@@ -84,11 +86,11 @@ class SignInForm extends React.Component {
 
           <FormItem>
             <Button type="primary" htmlType="submit">
-              Log in
+              {isLoginForm ? 'Log in' : 'Register'}
             </Button>
           </FormItem>
           <Button type="secondary" onClick={this.toggleForm}>
-            Or {isLogin ? 'register now' : 'login'}
+            Or {isLoginForm ? 'register now' : 'login'}
           </Button>
         </Form>
       </FormWrapper>
@@ -98,10 +100,4 @@ class SignInForm extends React.Component {
 
 const SignIn = Form.create()(SignInForm)
 
-export default connect(
-  {
-    _login: signal`login`,
-    _register: signal`register`
-  },
-  SignIn
-)
+export default withAuth(SignIn)
