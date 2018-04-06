@@ -4,7 +4,8 @@ const { Provider, Consumer } = React.createContext()
 export class AuthProvider extends Component {
   state = {
     isLoggedIn: false,
-    user: null
+    user: null,
+    token: null
   }
   render() {
     const { state, props: { children } } = this

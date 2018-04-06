@@ -1,33 +1,37 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { connect } from '@cerebral/react'
-import { state, signal } from 'cerebral/tags'
-import { log } from 'util'
+import { withAuth } from '../context/Auth'
 
-const Navigation = ({ isAuthenticated, _logout }) => {
+import { log } from 'util'
+import styled from 'styled-components'
+
+const Nav = styled.nav`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 60px;
+  border-bottom: 1px solid black;
+`
+
+const Navigation = ({ auth }) => {
   return (
-    <nav>
+    <Nav>
       <Link to="/">Home</Link>
-      {isAuthenticated && (
+      {auth.S.isLoggedIn && (
         <Fragment>
           <Link to="/settings">Settings</Link>
           <Link to="/mybooks">My Books</Link>
           <Link to="/requests">Requests</Link>
         </Fragment>
       )}
-      {isAuthenticated ? (
-        <a onClick={() => _logout()}>Logout</a>
+      {auth.S.isLoggedIn ? (
+        <a onClick={auth.A.logout}>Logout</a>
       ) : (
         <Link to="/signin">Sign in</Link>
       )}
-    </nav>
+    </Nav>
   )
 }
 
-export default connect(
-  {
-    isAuthenticated: state`auth.isAuthenticated`,
-    _logout: signal`logout`
-  },
-  Navigation
-)
+export default withAuth(Navigation)

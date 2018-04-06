@@ -1,13 +1,35 @@
 import React, { Component } from 'react'
 import { Form, Input, Button } from 'antd'
-import { connect } from '@cerebral/react'
-import { state } from 'cerebral/tags'
 import axios from 'axios'
+import { withAuth } from '../context/Auth'
 const FormItem = Form.Item
 
 class MyBooks extends Component {
   state = {
-    isFormOpen: false
+    isFormOpen: false,
+    books: null,
+    error: null,
+    isLoading: false
+  }
+  componentDidMount = () => {
+    this.setState(prevState => ({
+      isLoading: true
+    }))
+
+    axios
+      .get(`/api/books/?user=${this.props.auth.S.user.id}`)
+      .then(({ data }) =>
+        this.setState(prevState => ({
+          isLoading: false,
+          books: data
+        }))
+      )
+      .catch(e =>
+        this.setState(prevState => ({
+          error: 'An error occured while fetching books',
+          isLoading: false
+        }))
+      )
   }
 
   toggleForm = () =>
@@ -16,16 +38,19 @@ class MyBooks extends Component {
     }))
 
   handleAddBook = e => {
-    const { token, user, form } = this.props
+    const { auth, form } = this.props
     e.preventDefault()
     form.validateFields((err, formData) => {
       if (!err) {
+        this.setState(prevState => ({
+          isFormOpen: false
+        }))
         axios.post(
           '/api/books',
           { formData },
           {
             headers: {
-              Authorization: `Bearer ${token}`
+              Authorization: `Bearer ${auth.S.token}`
             }
           }
         )
@@ -64,9 +89,4 @@ class MyBooks extends Component {
 
 const MyBooksWithForm = Form.create()(MyBooks)
 
-export default connect(
-  {
-    token: state`auth.token`
-  },
-  MyBooksWithForm
-)
+export default withAuth(MyBooksWithForm)
