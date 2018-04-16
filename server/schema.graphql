@@ -1,0 +1,48 @@
+type Book {
+  id: ID!
+  title: String!
+  author: String!
+}
+
+type User {
+  id: ID!
+  pseudo: String!
+  books: [Book!]!
+  password: String!
+  fullName: String
+  city: String
+  state: String
+  requestedTrades: [Trade!]!
+  acceptedTrades: [Trade!]!
+}
+
+type Trade {
+  id: ID!
+  book: Book!
+  requester: User!
+  accepted: Boolean!
+}
+
+type Query {
+  books(id: String): [Book!]!
+}
+
+type Mutation {
+  addBook(title: String!, author: String!): Book!
+  addUser(
+    pseudo: String!
+    password: String!
+    fullName: String
+    city: String
+    state: String
+  ): User
+  updateUser(
+    pseudo: String
+    password: String
+    fullName: String
+    city: String
+    state: String
+  ): User!
+  requestTrade(bookId: ID!): Trade!
+  acceptTrade(tradeId: ID!): Trade!
+}
