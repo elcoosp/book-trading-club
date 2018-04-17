@@ -1,11 +1,11 @@
 type Book {
-  id: ID!
+  _id: ID!
   title: String!
   author: String!
 }
 
 type User {
-  id: ID!
+  _id: ID!
   pseudo: String!
   books: [Book!]!
   password: String!
@@ -17,7 +17,7 @@ type User {
 }
 
 type Trade {
-  id: ID!
+  _id: ID!
   book: Book!
   requester: User!
   accepted: Boolean!
