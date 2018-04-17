@@ -54,11 +54,12 @@ const resolvers = {
     },
     addUser: async (obj, args, ctx, info) => {
       const [e, user] = await to(new User(args).save())
-      return e ? e : user.toObject()
+
+      return e ? e : without`password`(user.toObject())
     },
     updateUser: async (obj, args, ctx, info) => {
       const [e, user] = await to(User.findById(ctx.id))
-      return e ? e : user.toObject()
+      return e ? e : without`password`(user.toObject())
     }
   }
 }
