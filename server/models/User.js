@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 
 const User = new Schema({
   pseudo: { type: String, required: true },
-  password: { type: String, required: true },
+  password: { type: String, required: true, select: false },
   books: [{ type: Schema.Types.ObjectId, ref: 'Book' }],
   fullName: String,
   city: String,
