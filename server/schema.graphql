@@ -23,8 +23,12 @@ type Trade {
   accepted: Boolean!
 }
 
+type JwtPayload {
+  token: String!
+}
+
 type Query {
-  login(pseudo: String!, password: String!): User
+  login(pseudo: String!, password: String!): JwtPayload
   books(id: String): [Book!]!
 }
 
