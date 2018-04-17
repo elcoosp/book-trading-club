@@ -4,14 +4,9 @@ const bcrypt = require('bcrypt')
 const to = require('await-to-js').to
 const jwt = require('jsonwebtoken')
 const dotenv = require('dotenv')
+const { without, arrayWrap } = require('./utils')
 dotenv.config()
 const { JWT_SECRET } = process.env
-const arrayWrap = v => (!v ? [] : Array.isArray(v) ? v : [v])
-const without = ([field]) => obj =>
-  Object.entries(obj).reduce((acc, [key, value]) => {
-    key !== field && (acc[key] = value)
-    return acc
-  }, {})
 
 const resolvers = {
   Query: {
