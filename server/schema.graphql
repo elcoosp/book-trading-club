@@ -24,6 +24,7 @@ type Trade {
 }
 
 type Query {
+  login(pseudo: String!, password: String!): User
   books(id: String): [Book!]!
 }
 
