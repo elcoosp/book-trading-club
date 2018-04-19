@@ -13,8 +13,8 @@ mongoose.connect(MONGODB_URI).then(() => console.log('CONNECTED TO DB'))
 const server = new GraphQLServer({
   typeDefs: './server/schema.graphql',
   resolvers,
-  context: ({ request: { headers } }) => ({
-    user: checkHeadersToSetUser(headers)
+  context: async ({ request: { headers } }) => ({
+    user: await checkHeadersToSetUser(headers)
   })
 })
 server.start(
