@@ -8,6 +8,13 @@ const { without, arrayWrap } = require('./utils')
 dotenv.config()
 const { JWT_SECRET } = process.env
 
+const withAuth = resolver => (obj, args, ctx, info) => {
+  if (ctx.user) return resolver(obj, args, ctx, info)
+  else {
+    throw new Error('You are not authorized')
+  }
+}
+
 const resolvers = {
   Query: {
     books: async (obj, { id }, ctx, info) => {
@@ -43,15 +50,16 @@ const resolvers = {
     }
   },
   Mutation: {
-    addBook: async (obj, { title, author }, ctx, info) => {
+    addBook: withAuth(async (obj, { title, author }, ctx, info) => {
       const [e, book] = await to(
         new Book({
           title,
           author
         }).save()
       )
+
       return e ? e : book.toObject()
-    },
+    }),
     addUser: async (obj, args, ctx, info) => {
       const [e, user] = await to(new User(args).save())
 

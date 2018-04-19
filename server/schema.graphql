@@ -1,12 +1,10 @@
-directive @isAuthenticated on QUERY | FIELD
-
-type Book @isAuthenticated {
+type Book {
   _id: ID!
   title: String!
   author: String!
 }
 
-type User @isAuthenticated {
+type User {
   _id: ID!
   pseudo: String!
   books: [Book!]!
@@ -18,7 +16,7 @@ type User @isAuthenticated {
   acceptedTrades: [Trade!]!
 }
 
-type Trade @isAuthenticated {
+type Trade {
   _id: ID!
   book: Book!
   requester: User!
@@ -31,11 +29,11 @@ type JwtPayload {
 
 type Query {
   login(pseudo: String!, password: String!): JwtPayload
-  books(id: String): [Book!]! @isAuthenticated
+  books(id: String): [Book!]!
 }
 
 type Mutation {
-  addBook(title: String!, author: String!): Book! @isAuthenticated
+  addBook(title: String!, author: String!): Book!
   addUser(
     pseudo: String!
     password: String!
@@ -49,7 +47,7 @@ type Mutation {
     fullName: String
     city: String
     state: String
-  ): User! @isAuthenticated
-  requestTrade(bookId: ID!): Trade! @isAuthenticated
-  acceptTrade(tradeId: ID!): Trade! @isAuthenticated
+  ): User!
+  requestTrade(bookId: ID!): Trade!
+  acceptTrade(tradeId: ID!): Trade!
 }
