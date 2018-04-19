@@ -42,10 +42,15 @@ const resolvers = {
 
       return e ? e : without`password`(user.toObject())
     },
-    updateUser: async (obj, args, ctx, info) => {
-      const [e, user] = await to(User.findById(ctx.id))
-      return e ? e : without`password`(user.toObject())
-    }
+    updateUser: withAuth(async (obj, args, ctx, info) => {
+      const [e, user] = await to(User.findById(ctx.user._id))
+      user.set(args)
+      const [saveError, updatedUser] = await to(user.save())
+
+      return e || saveError
+        ? e || saveError
+        : without`password`(updatedUser.toObject())
+    })
   }
 }
 module.exports = resolvers

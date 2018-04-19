@@ -8,7 +8,7 @@ type User {
   _id: ID!
   pseudo: String!
   books: [Book!]!
-  password: String!
+  password: String
   fullName: String
   city: String
   state: String
