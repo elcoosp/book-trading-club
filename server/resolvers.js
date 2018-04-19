@@ -1,26 +1,16 @@
 const Book = require('./models/Book')
 const User = require('./models/User')
-const bcrypt = require('bcrypt')
 const to = require('await-to-js').to
-const jwt = require('jsonwebtoken')
-const dotenv = require('dotenv')
-const { without, arrayWrap } = require('./utils')
-dotenv.config()
-const { JWT_SECRET } = process.env
+const { withAuth, checkPasswordsAndDeliverToken } = require('.//services/auth')
 
-const withAuth = resolver => (obj, args, ctx, info) => {
-  if (ctx.user) return resolver(obj, args, ctx, info)
-  else {
-    throw new Error('You are not authorized')
-  }
-}
+const { without, arrayWrap } = require('./utils')
 
 const resolvers = {
   Query: {
     books: async (obj, { id }, ctx, info) => {
       const getData = id ? Book.findById(id) : Book.find({})
-      const [e, book] = await to(getData)
-      return e ? e : arrayWrap(book.toObject())
+      const [e, bookOrBooks] = await to(getData)
+      return e ? e : arrayWrap(bookOrBooks.toObject())
     },
 
     login: async (obj, { pseudo, password }, ctx, info) => {
@@ -34,19 +24,7 @@ const resolvers = {
       )
       if (e) throw new Error('An error occured')
       if (!user) throw new Error('User pseudo does not exist')
-      else {
-        const passwordMatches = await bcrypt.compare(password, user.password)
-        if (passwordMatches) {
-          const token = jwt.sign(
-            without`password`(user.toObject()),
-            JWT_SECRET,
-            {
-              expiresIn: '7d'
-            }
-          )
-          return { token }
-        } else throw new Error('User pseudo and password do not match')
-      }
+      else return checkPasswordsAndDeliverToken(password, user)
     }
   },
   Mutation: {
@@ -57,7 +35,6 @@ const resolvers = {
           author
         }).save()
       )
-
       return e ? e : book.toObject()
     }),
     addUser: async (obj, args, ctx, info) => {
