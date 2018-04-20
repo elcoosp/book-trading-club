@@ -1,5 +1,6 @@
 const Book = require('./models/Book')
 const User = require('./models/User')
+const Trade = require('./models/Trade')
 const to = require('await-to-js').to
 const { withAuth, checkPasswordsAndDeliverToken } = require('.//services/auth')
 
@@ -9,8 +10,11 @@ const resolvers = {
   Query: {
     books: async (obj, { id }, ctx, info) => {
       const getData = id ? Book.findById(id) : Book.find({})
+
       const [e, bookOrBooks] = await to(getData)
-      return e ? e : arrayWrap(bookOrBooks.toObject())
+      console.log(bookOrBooks)
+
+      return e ? e : arrayWrap(bookOrBooks).map(b => b.toObject())
     },
 
     login: async (obj, { pseudo, password }, ctx, info) => {
@@ -50,6 +54,12 @@ const resolvers = {
       return e || saveError
         ? e || saveError
         : without`password`(updatedUser.toObject())
+    }),
+    requestTrade: withAuth(async (obj, { id }, ctx, info) => {
+      const [e, trade] = await to(
+        new Trade({ bookId: id, requester: ctx.user.id }).save()
+      )
+      return e ? e : trade.toObject()
     })
   }
 }
