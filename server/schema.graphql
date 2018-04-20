@@ -2,6 +2,7 @@ type Book {
   _id: ID!
   title: String!
   author: String!
+  owner: User!
 }
 
 type User {
@@ -49,5 +50,5 @@ type Mutation {
     state: String
   ): User!
   requestTrade(book: ID!): Trade!
-  acceptTrade(tradeId: ID!): Trade!
+  acceptTrade(trade: ID!): Trade!
 }
