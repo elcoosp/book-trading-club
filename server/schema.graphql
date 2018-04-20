@@ -48,6 +48,6 @@ type Mutation {
     city: String
     state: String
   ): User!
-  requestTrade(bookId: ID!): Trade!
+  requestTrade(book: ID!): Trade!
   acceptTrade(tradeId: ID!): Trade!
 }
