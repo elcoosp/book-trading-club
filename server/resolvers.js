@@ -31,14 +31,22 @@ const resolvers = {
     }
   },
   Mutation: {
-    addBook: withAuth(async (obj, { title, author }, ctx, info) => {
+    addBook: withAuth(async (obj, { title, author }, { user }, info) => {
       const [e, book] = await to(
         new Book({
           title,
+          owner: user._id,
           author
         }).save()
       )
-      return e ? e : book.toObject()
+      // Register book in user books
+      const [userError, userFromDb] = await to(User.findById(user._id))
+      userFromDb.books.push(book._id)
+      const [userSaveError, userSaved] = await to(userFromDb.save())
+
+      return e || userError || userSaveError
+        ? e || userError || userSaveError
+        : book.toObject()
     }),
     addUser: async (obj, args, ctx, info) => {
       const [e, user] = await to(new User(args).save())
@@ -60,8 +68,6 @@ const resolvers = {
           .save()
           .then(doc => doc.populate('requester book').execPopulate())
       )
-
-      console.log(trade)
 
       return e ? e : trade.toObject()
     })
