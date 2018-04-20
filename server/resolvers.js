@@ -12,7 +12,6 @@ const resolvers = {
       const getData = id ? Book.findById(id) : Book.find({})
 
       const [e, bookOrBooks] = await to(getData)
-      console.log(bookOrBooks)
 
       return e ? e : arrayWrap(bookOrBooks).map(b => b.toObject())
     },
@@ -55,10 +54,15 @@ const resolvers = {
         ? e || saveError
         : without`password`(updatedUser.toObject())
     }),
-    requestTrade: withAuth(async (obj, { id }, ctx, info) => {
+    requestTrade: withAuth(async (obj, { book }, ctx, info) => {
       const [e, trade] = await to(
-        new Trade({ bookId: id, requester: ctx.user.id }).save()
+        new Trade({ book, requester: ctx.user._id })
+          .save()
+          .then(doc => doc.populate('requester book').execPopulate())
       )
+
+      console.log(trade)
+
       return e ? e : trade.toObject()
     })
   }
