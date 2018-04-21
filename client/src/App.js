@@ -6,21 +6,23 @@ import NewBook from './components/NewBook'
 import Settings from './components/Settings'
 import Trades from './components/Trades'
 import Navigation from './components/Navigation'
+import ProtectedRoute from './components/ProtectedRoute'
 import SignIn from './components/SignIn'
-
-import { FragmentsOnCompositeTypes } from 'graphql'
+import { AuthProvider } from './context/Auth'
 
 class App extends Component {
   render() {
     return (
       <Fragment>
-        <Navigation />
-        <Route exact path="/" component={Home} />
-        <Route path="/books" component={Books} />
-        <Route path="/books/new" component={NewBook} />
-        <Route exact path="/settings" component={Settings} />
-        <Route exact path="/trades" component={Trades} />
-        <Route exact path="/signin" component={SignIn} />
+        <AuthProvider>
+          <Navigation />
+          <Route exact path="/" component={Home} />
+          <ProtectedRoute path="/books" component={Books} />
+          <ProtectedRoute path="/books/new" component={NewBook} />
+          <ProtectedRoute exact path="/settings" component={Settings} />
+          <ProtectedRoute exact path="/trades" component={Trades} />
+          <Route exact path="/signin" component={SignIn} />
+        </AuthProvider>
       </Fragment>
     )
   }
