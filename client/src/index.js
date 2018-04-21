@@ -5,18 +5,26 @@ import { ApolloProvider } from 'react-apollo'
 import App from './App'
 import registerServiceWorker from './registerServiceWorker'
 import { BrowserRouter as Router } from 'react-router-dom'
+import { ThemeProvider, injectGlobal } from 'styled-components'
+import styledNormalize from 'styled-normalize'
+import theme from './theme'
 
-// Pass your GraphQL endpoint to uri
+injectGlobal`
+${styledNormalize}
+`
+
 const client = new ApolloClient({
   uri: 'http://localhost:5000/'
 })
 
-const ApolloWithRouter = AppComponent => (
+const ApolloRouterTheme = AppComponent => (
   <Router>
     <ApolloProvider client={client}>
-      <AppComponent />
+      <ThemeProvider theme={theme}>
+        <AppComponent />
+      </ThemeProvider>
     </ApolloProvider>
   </Router>
 )
 
-render(ApolloWithRouter(App), document.getElementById('root'))
+render(ApolloRouterTheme(App), document.getElementById('root'))
