@@ -6,7 +6,7 @@ import NewBook from './components/NewBook'
 import Settings from './components/Settings'
 import Trades from './components/Trades'
 import Navigation from './components/Navigation'
-import Signin from './components/Signin'
+import SignIn from './components/SignIn'
 
 import { FragmentsOnCompositeTypes } from 'graphql'
 
@@ -20,7 +20,7 @@ class App extends Component {
         <Route path="/books/new" component={NewBook} />
         <Route exact path="/settings" component={Settings} />
         <Route exact path="/trades" component={Trades} />
-        <Route exact path="/signin" component={Signin} />
+        <Route exact path="/signin" component={SignIn} />
       </Fragment>
     )
   }

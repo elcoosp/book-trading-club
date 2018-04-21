@@ -12,7 +12,7 @@ export default () => {
       <Link to="/books">Books</Link>
       <Link to="/settings">Settings</Link>
       <Link to="/trades">Trades</Link>
-      <Link to="/signin">Trades</Link>
+      <Link to="/signin">Sign in</Link>
     </Nav>
   )
 }
