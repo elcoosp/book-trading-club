@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Books from './components/Books'
 import Home from './components/Home'
 import NewBook from './components/NewBook'
@@ -16,12 +16,14 @@ class App extends Component {
       <Fragment>
         <AuthProvider>
           <Navigation />
-          <Route exact path="/" component={Home} />
-          <ProtectedRoute path="/books" component={Books} />
-          <ProtectedRoute path="/books/new" component={NewBook} />
-          <ProtectedRoute exact path="/settings" component={Settings} />
-          <ProtectedRoute exact path="/trades" component={Trades} />
-          <Route exact path="/signin" component={SignIn} />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <ProtectedRoute path="/books" component={Books} />
+            <ProtectedRoute path="/books/new" component={NewBook} />
+            <ProtectedRoute exact path="/settings" component={Settings} />
+            <ProtectedRoute exact path="/trades" component={Trades} />
+            <Route exact path="/signin" component={SignIn} />
+          </Switch>
         </AuthProvider>
       </Fragment>
     )
