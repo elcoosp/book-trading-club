@@ -1,9 +1,11 @@
 import { gql } from 'apollo-boost'
-import { Query } from 'react-apollo'
+import QueryLoaderError from './QueryLoaderError'
 import React, { Component } from 'react'
+import { NULL } from 'graphql/language/kinds'
+import { link } from 'fs'
 
 const GET_BOOKS = gql`
-  query books {
+  query {
     books {
       _id
       title
@@ -15,14 +17,18 @@ const GET_BOOKS = gql`
 export default class Books extends Component {
   render() {
     return (
-      <Query query={GET_BOOKS}>
-        {({ loading, error, data }) => {
-          if (loading) return <div>Loading...</div>
-          if (error) console.log(error)
-          else console.log(data)
-          return <div>books</div>
-        }}
-      </Query>
+      <QueryLoaderError
+        query={GET_BOOKS}
+        finalComp={({ books }) => (
+          <ul>
+            {books.map(({ title, author, _id }) => (
+              <li key={_id}>
+                <h1>{title}</h1> <h2>{author}</h2>
+              </li>
+            ))}
+          </ul>
+        )}
+      />
     )
   }
 }
