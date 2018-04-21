@@ -1,19 +1,16 @@
-import { gql } from 'apollo-boost'
-import { Query } from 'react-apollo'
 import React, { Component } from 'react'
-
-const GET_BOOKS = gql`
-  query books {
-    books {
-      _id
-      title
-      author
-    }
-  }
+import styled from 'styled-components'
+const HomeMain = styled.main`
+  background-color: ${p => p.theme.colors.dark};
 `
 
-export default class Books extends Component {
+export default class Home extends Component {
   render() {
-    return <div>Home</div>
+    return (
+      <HomeMain>
+        <h1>Book trading club</h1>
+        <p>Welcome abroad</p>
+      </HomeMain>
+    )
   }
 }
