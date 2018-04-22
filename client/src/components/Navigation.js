@@ -10,14 +10,16 @@ const Nav = styled.div`
 export default () => {
   return (
     <AuthConsumer>
-      {({ isAuth }) => (
+      {({ isAuth, _logout }) => (
         <Nav>
           <Link to="/">Home</Link>
           {isAuth && <Link to="/books">Books</Link>}
           {isAuth && <Link to="/settings">Settings</Link>}
           {isAuth && <Link to="/trades">Trades</Link>}
           {isAuth ? (
-            <Link to="/">Logout</Link>
+            <Link to="/" onClick={_logout}>
+              Logout
+            </Link>
           ) : (
             <Link to="/signin">Sign in</Link>
           )}

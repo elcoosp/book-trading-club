@@ -2,6 +2,7 @@ import React from 'react'
 import { gql } from 'apollo-boost'
 import { Mutation, graphql } from 'react-apollo'
 
+import { withRouter } from 'react-router-dom'
 const { Provider, Consumer } = React.createContext()
 
 const LOGIN = gql`
@@ -18,66 +19,74 @@ const withLoginMutation = Component => props => (
   </Mutation>
 )
 
-export const AuthProvider = withLoginMutation(
-  class AuthProv extends React.Component {
-    state = { isAuth: false, errors: { login: null } }
-    _login = data => {
-      this.props
-        .loginMutation(data)
-        .then(({ data: { login: { token } } }) => {
-          try {
-            localStorage.setItem('token', token)
+export const AuthProvider = withRouter(
+  withLoginMutation(
+    class AuthProv extends React.Component {
+      state = { isAuth: false, errors: { login: null } }
+      _login = data => {
+        this.props
+          .loginMutation(data)
+          .then(({ data: { login: { token } } }) => {
+            try {
+              localStorage.setItem('token', token)
+              this.setState(prevState => ({
+                isAuth: true
+              }))
+              this.props.history.push('/books')
+            } catch (e) {
+              throw new Error('Could not store token')
+            }
+          })
+          .catch(e => {
             this.setState(prevState => ({
-              isAuth: true
+              isAuth: false,
+              errors: { login: e }
             }))
-          } catch (e) {
-            throw new Error('Could not store token')
-          }
-        })
-        .catch(e => {
+          })
+      }
+
+      _logout = () => {
+        try {
+          localStorage.removeItem('token')
           this.setState(prevState => ({
-            isAuth: false,
-            errors: { login: e }
+            isAuth: false
           }))
-        })
-    }
+        } catch (e) {
+          console.log(e)
+        }
+      }
 
-    _logout = () => {
-      this.setState(prevState => ({
-        isAuth: false
-      }))
-    }
+      _initAuthState = () => {
+        try {
+          const token = localStorage.getItem('token')
+          this.setState(prevState => ({
+            isAuth: token ? true : false
+          }))
+        } catch (e) {
+          this.setState(prevState => ({
+            isAuth: false
+          }))
+        }
+      }
+      componentDidMount = () => {
+        this._initAuthState()
+      }
 
-    _initAuthState = () => {
-      try {
-        const token = localStorage.getItem('token')
-        this.setState(prevState => ({
-          isAuth: token ? true : false
-        }))
-      } catch (e) {
-        this.setState(prevState => ({
-          isAuth: false
-        }))
+      render() {
+        return (
+          <Provider
+            value={{
+              isAuth: this.state.isAuth,
+              _login: this._login,
+              _logout: this._logout
+            }}
+          >
+            {this.props.children}
+          </Provider>
+        )
       }
     }
-    componentDidMount = () => {
-      this._initAuthState()
-    }
-
-    render() {
-      return (
-        <Provider
-          value={{
-            isAuth: this.state.isAuth,
-            _login: this._login,
-            _logout: this._logout
-          }}
-        >
-          {this.props.children}
-        </Provider>
-      )
-    }
-  }
+  )
 )
 
 export const withAuth = Component => props => (
