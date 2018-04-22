@@ -20,13 +20,26 @@ const withLoginMutation = Component => props => (
 
 export const AuthProvider = withLoginMutation(
   class AuthProv extends React.Component {
-    state = { isAuth: false }
+    state = { isAuth: false, errors: { login: null } }
     _login = data => {
-      this.props.loginMutation(data).then(console.log)
-
-      this.setState(prevState => ({
-        isAuth: true
-      }))
+      this.props
+        .loginMutation(data)
+        .then(({ data: { login: { token } } }) => {
+          try {
+            localStorage.setItem('token', token)
+            this.setState(prevState => ({
+              isAuth: true
+            }))
+          } catch (e) {
+            throw new Error('Could not store token')
+          }
+        })
+        .catch(e => {
+          this.setState(prevState => ({
+            isAuth: false,
+            errors: { login: e }
+          }))
+        })
     }
 
     _logout = () => {
@@ -34,6 +47,23 @@ export const AuthProvider = withLoginMutation(
         isAuth: false
       }))
     }
+
+    _initAuthState = () => {
+      try {
+        const token = localStorage.getItem('token')
+        this.setState(prevState => ({
+          isAuth: token ? true : false
+        }))
+      } catch (e) {
+        this.setState(prevState => ({
+          isAuth: false
+        }))
+      }
+    }
+    componentDidMount = () => {
+      this._initAuthState()
+    }
+
     render() {
       return (
         <Provider
