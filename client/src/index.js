@@ -14,7 +14,21 @@ ${styledNormalize}
 `
 
 const client = new ApolloClient({
-  uri: 'http://localhost:5000/'
+  uri: 'http://localhost:5000/',
+  request: operation =>
+    new Promise((resolve, reject) => {
+      try {
+        const token = localStorage.getItem('token')
+
+        return resolve(
+          operation.setContext({
+            headers: { authorization: `Bearer ${token}` }
+          })
+        )
+      } catch (e) {
+        return reject(e)
+      }
+    })
 })
 
 const ApolloRouterTheme = AppComponent => (
