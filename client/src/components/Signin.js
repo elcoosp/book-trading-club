@@ -1,8 +1,7 @@
-import { gql } from 'apollo-boost'
 import React, { Component } from 'react'
-import { AuthConsumer } from '../context/Auth'
-import { Mutation } from 'react-apollo'
-export default class SignIn extends Component {
+import { withAuth } from '../context/Auth'
+
+class SignInForm extends Component {
   state = {
     isLoginMode: true,
     password: '',
@@ -21,39 +20,38 @@ export default class SignIn extends Component {
 
   onSubmit = e => {
     e.preventDefault()
+    const { password, pseudo } = this.state
+    this.props._login({ variables: { password, pseudo } })
   }
 
   render() {
     const { isLoginMode, password, pseudo } = this.state
+    const { isAuth } = this.props
     return (
-      <AuthConsumer>
-        {({ _login }) => (
-          <main>
-            <form onSubmit={this.onSubmit}>
-              <label htmlFor="pseudo">Pseudo</label>
-              <input
-                name="pseudo"
-                type="text"
-                value={pseudo}
-                onChange={this.onChange}
-              />
-              <label htmlFor="password">Password</label>
-              <input
-                name="password"
-                type="password"
-                value={password}
-                onChange={this.onChange}
-              />
-              <button type="submit">
-                {isLoginMode ? 'Login' : 'Register'}
-              </button>
-            </form>
-            <button onClick={this.toggleFormMode}>
-              {isLoginMode ? 'Or Register' : 'Or login'}
-            </button>
-          </main>
-        )}
-      </AuthConsumer>
+      <main>
+        <form onSubmit={this.onSubmit}>
+          <label htmlFor="pseudo">Pseudo</label>
+          <input
+            name="pseudo"
+            type="text"
+            value={pseudo}
+            onChange={this.onChange}
+          />
+          <label htmlFor="password">Password</label>
+          <input
+            name="password"
+            type="password"
+            value={password}
+            onChange={this.onChange}
+          />
+          <button type="submit">{isLoginMode ? 'Login' : 'Register'}</button>
+        </form>
+        <button onClick={this.toggleFormMode}>
+          {isLoginMode ? 'Or Register' : 'Or login'}
+        </button>
+      </main>
     )
   }
 }
+
+export default withAuth(SignInForm)
