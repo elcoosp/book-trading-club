@@ -29,7 +29,6 @@ type JwtPayload {
 }
 
 type Query {
-  login(pseudo: String!, password: String!): JwtPayload
   books(id: String): [Book!]!
 }
 
@@ -51,4 +50,5 @@ type Mutation {
   ): User!
   requestTrade(book: ID!): Trade!
   acceptTrade(trade: ID!): Trade!
+  login(pseudo: String!, password: String!): JwtPayload
 }

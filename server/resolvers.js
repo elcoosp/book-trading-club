@@ -14,8 +14,9 @@ const resolvers = {
       const [e, bookOrBooks] = await to(getData)
 
       return e ? e : arrayWrap(bookOrBooks).map(b => b.toObject())
-    },
-
+    }
+  },
+  Mutation: {
     login: async (obj, { pseudo, password }, ctx, info) => {
       const [e, user] = await to(
         User.findOne(
@@ -28,9 +29,7 @@ const resolvers = {
       if (e) throw new Error('An error occured')
       if (!user) throw new Error('User pseudo does not exist')
       else return checkPasswordsAndDeliverToken(password, user)
-    }
-  },
-  Mutation: {
+    },
     addBook: withAuth(async (obj, { title, author }, { user }, info) => {
       const [e, book] = await to(
         new Book({
