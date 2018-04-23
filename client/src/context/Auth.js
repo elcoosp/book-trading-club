@@ -1,7 +1,7 @@
 import React from 'react'
 import { gql } from 'apollo-boost'
 import { Mutation, graphql } from 'react-apollo'
-
+import { compose } from 'recompose'
 import { withRouter } from 'react-router-dom'
 const { Provider, Consumer } = React.createContext()
 
@@ -13,14 +13,27 @@ const LOGIN = gql`
   }
 `
 
+const ADD_USER = gql`
+  mutation addUser($pseudo: String!, $password: String!) {
+    addUser(pseudo: $pseudo, password: $password) {
+      _id
+    }
+  }
+`
+
 const withLoginMutation = Component => props => (
   <Mutation mutation={LOGIN}>
     {login => <Component loginMutation={login} {...props} />}
   </Mutation>
 )
+const withMutations = comp =>
+  compose(
+    graphql(LOGIN, { name: 'loginMutation' }),
+    graphql(ADD_USER, { name: 'addUserMutation' })
+  )(comp)
 
 export const AuthProvider = withRouter(
-  withLoginMutation(
+  withMutations(
     class AuthProv extends React.Component {
       state = { isAuth: false, errors: { login: null } }
       _login = data => {
@@ -56,6 +69,16 @@ export const AuthProvider = withRouter(
         }
       }
 
+      _addUser = data => {
+        console.log(this.props)
+
+        this.props
+          .addUserMutation(data)
+          .then(({ data }) => {
+            console.log(data)
+          })
+          .catch(console.error)
+      }
       _initAuthState = () => {
         try {
           const token = localStorage.getItem('token')
@@ -78,7 +101,8 @@ export const AuthProvider = withRouter(
             value={{
               isAuth: this.state.isAuth,
               _login: this._login,
-              _logout: this._logout
+              _logout: this._logout,
+              _addUser: this._addUser
             }}
           >
             {this.props.children}
