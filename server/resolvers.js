@@ -12,8 +12,8 @@ const resolvers = {
       const getData = id ? Book.findById(id) : Book.find({})
 
       const [e, bookOrBooks] = await to(getData)
-
-      return e ? e : arrayWrap(bookOrBooks).map(b => b.toObject())
+      if (e) throw new Error('Could not get books')
+      return arrayWrap(bookOrBooks).map(b => b.toObject())
     }
   },
   Mutation: {
@@ -39,37 +39,37 @@ const resolvers = {
         }).save()
       )
       // Register book in user books
-      const [userError, userFromDb] = await to(User.findById(user._id))
+      const [userFetchError, userFromDb] = await to(User.findById(user._id))
       userFromDb.books.push(book._id)
       const [userSaveError, userSaved] = await to(userFromDb.save())
+      if (e || userFetchError || userSaveError)
+        throw new Error('Could not add book')
 
-      return e || userError || userSaveError
-        ? e || userError || userSaveError
-        : book.toObject()
+      return book.toObject()
     }),
     addUser: async (obj, args, ctx, info) => {
       const [e, user] = await to(new User(args).save())
-
-      return e ? e : without`password`(user.toObject())
+      if (e) throw new Error('Could not add user')
+      return without`password`(user.toObject())
     },
     updateUser: withAuth(async (obj, args, ctx, info) => {
       const [e, user] = await to(User.findById(ctx.user._id))
       user.set(args)
       const [saveError, updatedUser] = await to(user.save())
-
-      return e || saveError
-        ? e || saveError
-        : without`password`(updatedUser.toObject())
+      if (e || saveError) throw new Error('Could not update user')
+      return without`password`(updatedUser.toObject())
     }),
+
     requestTrade: withAuth(async (obj, { book }, ctx, info) => {
       const [e, trade] = await to(
         new Trade({ book, requester: ctx.user._id })
           .save()
           .then(doc => doc.populate('requester book').execPopulate())
       )
-
-      return e ? e : trade.toObject()
+      if (e) throw new Error('Could not request trade')
+      return trade.toObject()
     }),
+
     acceptTrade: withAuth(async (obj, { trade }, ctx, info) => {
       try {
         const tradeFetched = await Trade.findById(trade).populate(
