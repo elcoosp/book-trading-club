@@ -34,13 +34,7 @@ type Query {
 
 type Mutation {
   addBook(title: String!, author: String!): Book!
-  addUser(
-    pseudo: String!
-    password: String!
-    fullName: String
-    city: String
-    state: String
-  ): User
+  addUser(pseudo: String!, password: String!): User
   updateUser(
     pseudo: String
     password: String
