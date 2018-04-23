@@ -71,46 +71,33 @@ const resolvers = {
       return e ? e : trade.toObject()
     }),
     acceptTrade: withAuth(async (obj, { trade }, ctx, info) => {
-      const [tradeFetchError, tradeFetched] = await to(
-        Trade.findById(trade).populate('book requester')
-      )
-      tradeFetched.set({ accepted: true })
-      const [saveError, tradeSaved] = await to(tradeFetched.save())
+      try {
+        const tradeFetched = await Trade.findById(trade).populate(
+          'book requester'
+        )
+        tradeFetched.set({ accepted: true })
+        const tradeSaved = await tradeFetched.save()
 
-      // Exchange books between users, first erase book from context user books
-      const [userFetchError, user] = await to(User.findById(ctx.user._id))
-      user.set({ books: user.books.filter(b => b._id !== tradeSaved.book._id) })
-      const [userSaveError, updatedUser] = await to(user.save())
+        // Exchange books between users, first erase book from context user books
+        const userFetched = await User.findById(ctx.user._id)
+        userFetched.set({
+          books: userFetched.books.filter(b => b._id !== tradeSaved.book._id)
+        })
+        const userSaved = await userFetched.save()
 
-      // Then add the book to the requester books array
-      const [requesterFetchError, requester] = await to(
-        User.findById(tradeSaved.requester)
-      )
-      requester.books.push(tradeSaved.book._id)
-      const [requesterSaveError, requesterSaved] = await to(requester.save())
+        // Then add the book to the requester books array
+        const requesterFetched = await User.findById(tradeSaved.requester)
+        requesterFetched.books.push(tradeSaved.book._id)
+        const requesterSaved = await requesterFetched.save()
 
-      // Edit book owner
-      const [bookFetchError, bookFromDb] = await to(
-        Book.findById(tradeSaved.book._id)
-      )
-      bookFromDb.set({ owner: requesterSaved._id })
-
-      const [bookSaveError, bookSaved] = await to(bookFromDb.save())
-      return saveError ||
-        userFetchError ||
-        userSaveError ||
-        requesterFetchError ||
-        requesterSaveError ||
-        bookFetchError ||
-        bookSaveError
-        ? saveError ||
-            userFetchError ||
-            userSaveError ||
-            requesterFetchError ||
-            requesterSaveError ||
-            bookFetchError ||
-            bookSaveError
-        : tradeSaved.toObject()
+        // Edit book owner on Book model
+        const bookFetched = await Book.findById(tradeSaved.book._id)
+        bookFetched.set({ owner: requesterSaved._id })
+        const bookSaved = await bookFetched.save()
+        return tradeSaved.toObject()
+      } catch (e) {
+        throw new Error('Could not accept trade')
+      }
     })
   }
 }
