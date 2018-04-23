@@ -20,8 +20,14 @@ class SignInForm extends Component {
 
   onSubmit = e => {
     e.preventDefault()
-    const { password, pseudo } = this.state
-    this.props._login({ variables: { password, pseudo } })
+    const { isLoginMode, password, pseudo } = this.state
+    this.props[isLoginMode ? '_login' : '_addUser']({
+      variables: { password, pseudo }
+    })
+    this.setState(prevState => ({
+      password: '',
+      pseudo: ''
+    }))
   }
 
   render() {
