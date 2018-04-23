@@ -1,30 +1,24 @@
 import React from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import styled from 'styled-components'
-import { AuthConsumer } from '../context/Auth'
+import { withAuth } from '../context/Auth'
 
 const Nav = styled.div`
   background-color: ${p => p.theme.colors.brown};
   color: white;
 `
-export default () => {
-  return (
-    <AuthConsumer>
-      {({ isAuth, _logout }) => (
-        <Nav>
-          <Link to="/">Home</Link>
-          {isAuth && <Link to="/books">Books</Link>}
-          {isAuth && <Link to="/settings">Settings</Link>}
-          {isAuth && <Link to="/trades">Trades</Link>}
-          {isAuth ? (
-            <Link to="/" onClick={_logout}>
-              Logout
-            </Link>
-          ) : (
-            <Link to="/signin">Sign in</Link>
-          )}
-        </Nav>
-      )}
-    </AuthConsumer>
-  )
-}
+export default withAuth(({ authContext: { isAuth, _logout } }) => (
+  <Nav>
+    <Link to="/">Home</Link>
+    {isAuth && <Link to="/books">Books</Link>}
+    {isAuth && <Link to="/settings">Settings</Link>}
+    {isAuth && <Link to="/trades">Trades</Link>}
+    {isAuth ? (
+      <Link to="/" onClick={_logout}>
+        Logout
+      </Link>
+    ) : (
+      <Link to="/signin">Sign in</Link>
+    )}
+  </Nav>
+))
