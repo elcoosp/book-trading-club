@@ -21,7 +21,7 @@ class SignInForm extends Component {
   onSubmit = e => {
     e.preventDefault()
     const { isLoginMode, password, pseudo } = this.state
-    this.props[isLoginMode ? '_login' : '_addUser']({
+    this.props.authContext[isLoginMode ? '_login' : '_addUser']({
       variables: { password, pseudo }
     })
     this.setState(prevState => ({
