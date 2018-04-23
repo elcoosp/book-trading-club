@@ -1,6 +1,6 @@
 import React from 'react'
 import { gql } from 'apollo-boost'
-import { Mutation, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { compose } from 'recompose'
 import { withRouter } from 'react-router-dom'
 const { Provider, Consumer } = React.createContext()
@@ -21,11 +21,6 @@ const ADD_USER = gql`
   }
 `
 
-const withLoginMutation = Component => props => (
-  <Mutation mutation={LOGIN}>
-    {login => <Component loginMutation={login} {...props} />}
-  </Mutation>
-)
 const withMutations = comp =>
   compose(
     graphql(LOGIN, { name: 'loginMutation' }),
@@ -35,7 +30,8 @@ const withMutations = comp =>
 export const AuthProvider = withRouter(
   withMutations(
     class AuthProv extends React.Component {
-      state = { isAuth: false, errors: { login: null } }
+      state = { isAuth: false, errors: { login: null, addUser: null } }
+
       _login = data => {
         this.props
           .loginMutation(data)
@@ -79,6 +75,7 @@ export const AuthProvider = withRouter(
           })
           .catch(console.error)
       }
+
       _initAuthState = () => {
         try {
           const token = localStorage.getItem('token')
@@ -114,6 +111,6 @@ export const AuthProvider = withRouter(
 )
 
 export const withAuth = Component => props => (
-  <Consumer>{auth => <Component {...auth} {...props} />}</Consumer>
+  <Consumer>{auth => <Component authContext={auth} {...props} />}</Consumer>
 )
 export const AuthConsumer = Consumer
