@@ -39,17 +39,18 @@ export const AuthProvider = withRouter(
             try {
               localStorage.setItem('token', token)
               this.setState(prevState => ({
-                isAuth: true
+                isAuth: true,
+                errors: { login: null }
               }))
               this.props.history.push('/books')
             } catch (e) {
               throw new Error('Could not store token')
             }
           })
-          .catch(e => {
+          .catch(({ graphQLErrors: [{ message }] }) => {
             this.setState(prevState => ({
               isAuth: false,
-              errors: { login: e }
+              errors: { login: message }
             }))
           })
       }
@@ -71,9 +72,15 @@ export const AuthProvider = withRouter(
         this.props
           .addUserMutation(data)
           .then(({ data }) => {
-            console.log(data)
+            this.setState(prevState => ({
+              errors: { addUser: null }
+            }))
           })
-          .catch(console.error)
+          .catch(({ graphQLErrors: [{ message }] }) =>
+            this.setState(prevState => ({
+              errors: { addUser: message }
+            }))
+          )
       }
 
       _initAuthState = () => {
@@ -96,6 +103,7 @@ export const AuthProvider = withRouter(
         return (
           <Provider
             value={{
+              errors: this.state.errors,
               isAuth: this.state.isAuth,
               _login: this._login,
               _logout: this._logout,
