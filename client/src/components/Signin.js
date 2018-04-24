@@ -34,7 +34,10 @@ class SignInForm extends Component {
 
   render() {
     const { isLoginMode, password, pseudo } = this.state
-    const { isAuth } = this.props
+    const errors = this.props.authContext.errors[
+      isLoginMode ? 'login' : 'addUser'
+    ]
+
     return (
       <main>
         <form onSubmit={this.onSubmit}>
@@ -57,6 +60,8 @@ class SignInForm extends Component {
         <button onClick={this.toggleFormMode}>
           {isLoginMode ? 'Or Register' : 'Or login'}
         </button>
+
+        {errors && <p>{errors}</p>}
       </main>
     )
   }
