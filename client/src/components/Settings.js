@@ -45,10 +45,17 @@ export default withMutation(
 
     onSubmit = e => {
       e.preventDefault()
-      if (notEmpty(...Object.values(this.state))) {
+
+      //Check if there is at least a change in the form
+      if (Object.values(this.state).some(v => v.trim() != '')) {
         this.props
           .updateUserMutation({
-            variables: this.state
+            // Filter and send only changed fields
+            variables: Object.entries(this.state).reduce(
+              (acc, [key, val]) =>
+                val.trim() != '' ? { ...acc, [key]: val } : acc,
+              {}
+            )
           })
           .then(console.log)
           .catch(console.log)
