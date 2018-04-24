@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { withAuth } from '../context/Auth'
-
+import { notEmpty } from '../utils'
 class SignInForm extends Component {
   state = {
     isLoginMode: true,
@@ -21,13 +21,15 @@ class SignInForm extends Component {
   onSubmit = e => {
     e.preventDefault()
     const { isLoginMode, password, pseudo } = this.state
-    this.props.authContext[isLoginMode ? '_login' : '_addUser']({
-      variables: { password, pseudo }
-    })
-    this.setState(prevState => ({
-      password: '',
-      pseudo: ''
-    }))
+    if (notEmpty(password, pseudo)) {
+      this.props.authContext[isLoginMode ? '_login' : '_addUser']({
+        variables: { password, pseudo }
+      })
+      this.setState(prevState => ({
+        password: '',
+        pseudo: ''
+      }))
+    }
   }
 
   render() {
