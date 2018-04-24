@@ -18,8 +18,8 @@ class App extends Component {
           <Navigation />
           <Switch>
             <Route exact path="/" component={Home} />
-            <ProtectedRoute path="/books" component={Books} />
-            <ProtectedRoute path="/books/new" component={NewBook} />
+            <ProtectedRoute exact path="/books" component={Books} />
+            <ProtectedRoute exact path="/books/new" component={NewBook} />
             <ProtectedRoute exact path="/settings" component={Settings} />
             <ProtectedRoute exact path="/trades" component={Trades} />
             <Route exact path="/signin" component={SignIn} />
