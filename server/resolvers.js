@@ -52,12 +52,18 @@ const resolvers = {
       if (e) throw new Error('Could not add user')
       return without`password`(user.toObject())
     },
-    updateUser: withAuth(async (obj, args, ctx, info) => {
-      const [e, user] = await to(User.findById(ctx.user._id))
-      user.set(args)
-      const [saveError, updatedUser] = await to(user.save())
-      if (e || saveError) throw new Error('Could not update user')
-      return without`password`(updatedUser.toObject())
+    updateUser: withAuth((obj, args, ctx, info) => {
+      return Promise.all([
+        User.findOne({ pseudo: args.pseudo }),
+        User.findById(ctx.user._id)
+      ]).then(async ([pseudoAlreadyUsed, user]) => {
+        if (pseudoAlreadyUsed && pseudoAlreadyUsed._id.equals(user._id)) {
+          user.set(args)
+          const [saveError, updatedUser] = await to(user.save())
+          if (e || saveError) throw new Error('Could not update user')
+          return without`password`(updatedUser.toObject())
+        } else throw new Error('Pseudo already used')
+      })
     }),
 
     requestTrade: withAuth(async (obj, { book }, ctx, info) => {
