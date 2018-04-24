@@ -31,39 +31,54 @@ const UPDATE_USER = gql`
 export default withMutation(
   class Settings extends Component {
     state = {
-      pseudo: '',
-      password: '',
-      fullName: '',
-      city: '',
-      state: ''
+      form: {
+        pseudo: '',
+        password: '',
+        fullName: '',
+        city: '',
+        state: ''
+      },
+
+      error: null
     }
 
     onChange = ({ target: { value, name } }) =>
       this.setState(prevState => ({
-        [name]: value
+        form: {
+          ...prevState.form,
+          [name]: value
+        }
       }))
 
     onSubmit = e => {
       e.preventDefault()
 
       //Check if there is at least a change in the form
-      if (Object.values(this.state).some(v => v.trim() != '')) {
+      if (Object.values(this.state.form).some(v => v.trim() != '')) {
         this.props
           .updateUserMutation({
             // Filter and send only changed fields
-            variables: Object.entries(this.state).reduce(
+            variables: Object.entries(this.state.form).reduce(
               (acc, [key, val]) =>
                 val.trim() != '' ? { ...acc, [key]: val } : acc,
               {}
             )
           })
           .then(console.log)
-          .catch(console.log)
+          .catch(({ graphQLErrors: [{ message }] }) =>
+            this.setState(prevState => ({
+              error: message
+            }))
+          )
       }
     }
 
     render() {
-      const { pseudo, password, fullName, city, state } = this.state
+      const {
+        form: { pseudo, password, fullName, city, state },
+        error
+      } = this.state
+
       return (
         <main>
           <form onSubmit={this.onSubmit}>
@@ -108,6 +123,7 @@ export default withMutation(
             />
             <button type="submit">Change settings</button>
           </form>
+          {error && <p>{error}</p>}
         </main>
       )
     }
