@@ -1,6 +1,7 @@
 const Book = require('./models/Book')
 const User = require('./models/User')
 const Trade = require('./models/Trade')
+const getFieldNames = require('graphql-list-fields')
 const to = require('await-to-js').to
 const { withAuth, checkPasswordsAndDeliverToken } = require('.//services/auth')
 
@@ -14,7 +15,27 @@ const resolvers = {
       const [e, bookOrBooks] = await to(getData)
       if (e) throw new Error('Could not get books')
       return arrayWrap(bookOrBooks).map(b => b.toObject())
-    }
+    },
+
+    user: withAuth(async (obj, { id }, ctx, info) => {
+      const deepPopulate = fields => initAcc => {
+        const fieldPopulate = {
+          path: 'friends',
+          populate: { path: 'friends' }
+        }
+        // WIPPPPPP
+        console.log(fields.map(s => s.split('.').filter(arr => arr[0])))
+      }
+      const fields = getFieldNames(info)
+      const [e, user] = await to(
+        deepPopulate(fields)(User.findById(ctx.user._id)).exec()
+      )
+
+      console.log(fields)
+
+      if (e) throw new Error('Could not get user')
+      return user.toObject()
+    })
   },
   Mutation: {
     login: async (obj, { pseudo, password }, ctx, info) => {
