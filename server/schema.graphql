@@ -30,6 +30,7 @@ type JwtPayload {
 
 type Query {
   books(id: String): [Book!]!
+  user: User
 }
 
 type Mutation {
