@@ -11,6 +11,11 @@ import theme from './theme'
 
 injectGlobal`
 ${styledNormalize}
+
+html *
+{
+  font-family: 'Nunito', sans-serif !important;
+}
 `
 
 const client = new ApolloClient({

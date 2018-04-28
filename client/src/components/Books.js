@@ -4,6 +4,7 @@ import { gql } from 'apollo-boost'
 import QueryLoaderError from './QueryLoaderError'
 import { log } from 'util'
 import { Mutation } from 'react-apollo'
+import { Title } from '../ui/Common'
 
 const GET_BOOKS = gql`
   query {
@@ -33,6 +34,8 @@ export default class Books extends Component {
   render() {
     return (
       <Fragment>
+        <Title>Books</Title>
+
         <Link to="/books/new">Add a new book</Link>
         <QueryLoaderError
           query={GET_BOOKS}

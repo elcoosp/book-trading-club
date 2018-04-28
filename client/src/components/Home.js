@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
-const HomeMain = styled.main`
-  background-color: ${p => p.theme.colors.dark};
-`
+import { Title } from '../ui/Common'
 
 export default class Home extends Component {
   render() {
     return (
-      <HomeMain>
-        <h1>Book trading club</h1>
+      <main>
+        <Title>Book trading club</Title>
         <p>Welcome abroad</p>
-      </HomeMain>
+      </main>
     )
   }
 }
