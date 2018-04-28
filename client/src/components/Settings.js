@@ -2,6 +2,8 @@ import { gql } from 'apollo-boost'
 import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import { notEmpty } from '../utils'
+import { Title, Button, Main } from '../ui/Common'
+import { Form } from '../ui/Form'
 
 const withMutation = comp =>
   graphql(UPDATE_USER, { name: 'updateUserMutation' })(comp)
@@ -80,8 +82,10 @@ export default withMutation(
       } = this.state
 
       return (
-        <main>
-          <form onSubmit={this.onSubmit}>
+        <Main>
+          <Title>Settings</Title>
+
+          <Form onSubmit={this.onSubmit}>
             <label htmlFor="pseudo">Pseudo</label>
             <input
               name="pseudo"
@@ -121,10 +125,10 @@ export default withMutation(
               value={state}
               onChange={this.onChange}
             />
-            <button type="submit">Change settings</button>
-          </form>
+            <Button type="submit">Change settings</Button>
+          </Form>
           {error && <p>{error}</p>}
-        </main>
+        </Main>
       )
     }
   }

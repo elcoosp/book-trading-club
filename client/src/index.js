@@ -14,6 +14,7 @@ ${styledNormalize}
 
 html *
 {
+  box-sizing: border-box;
   font-family: 'Nunito', sans-serif !important;
 }
 `

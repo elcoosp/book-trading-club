@@ -1,10 +1,9 @@
-import React, { Component, Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react'
 import { gql } from 'apollo-boost'
 import QueryLoaderError from './QueryLoaderError'
 import { log } from 'util'
 import { Mutation } from 'react-apollo'
-import { Title } from '../ui/Common'
+import { Title, ButtonLink, Button, Main } from '../ui/Common'
 
 const GET_BOOKS = gql`
   query {
@@ -33,10 +32,10 @@ export default class Books extends Component {
 
   render() {
     return (
-      <Fragment>
+      <Main>
         <Title>Books</Title>
 
-        <Link to="/books/new">Add a new book</Link>
+        <ButtonLink to="/books/new">Add a new book</ButtonLink>
         <QueryLoaderError
           query={GET_BOOKS}
           finalComp={({ books }) => (
@@ -55,7 +54,8 @@ export default class Books extends Component {
                       <h1>{title}</h1>
                       <h2>{author}</h2>
 
-                      <button
+                      <Button
+                        secondary
                         onClick={() =>
                           requestTrade({ variables: { bookId: _id } })
                             .then(data =>
@@ -76,7 +76,7 @@ export default class Books extends Component {
                         }
                       >
                         Request Trade
-                      </button>
+                      </Button>
                     </li>
                   ))}
                 </ul>
@@ -84,7 +84,7 @@ export default class Books extends Component {
             </Mutation>
           )}
         />
-      </Fragment>
+      </Main>
     )
   }
 }

@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { withAuth } from '../context/Auth'
 import { notEmpty } from '../utils'
+import { Title, Button, Main } from '../ui/Common'
+import { Form } from '../ui/Form'
+
 class SignInForm extends Component {
   state = {
     isLoginMode: true,
@@ -39,8 +42,9 @@ class SignInForm extends Component {
     ]
 
     return (
-      <main>
-        <form onSubmit={this.onSubmit}>
+      <Main>
+        <Title>{isLoginMode ? 'Login' : 'Register a new account'}</Title>
+        <Form onSubmit={this.onSubmit}>
           <label htmlFor="pseudo">Pseudo</label>
           <input
             name="pseudo"
@@ -55,14 +59,14 @@ class SignInForm extends Component {
             value={password}
             onChange={this.onChange}
           />
-          <button type="submit">{isLoginMode ? 'Login' : 'Register'}</button>
-        </form>
-        <button onClick={this.toggleFormMode}>
+          <Button type="submit">{isLoginMode ? 'Login' : 'Register'}</Button>
+        </Form>
+        <Button onClick={this.toggleFormMode} secondary>
           {isLoginMode ? 'Or Register' : 'Or login'}
-        </button>
+        </Button>
 
         {errors && <p>{errors}</p>}
-      </main>
+      </Main>
     )
   }
 }

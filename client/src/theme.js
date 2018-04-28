@@ -16,9 +16,9 @@ const spacing = {
 }
 
 const shadow = {
-  small: '0 2px 3px 1px rgba(0, 0, 0, 0.2);',
-  medium: '0 2px 6px 1px rgba(0, 0, 0, 0.2);',
-  large: '0 2px 8px 1px rgba(0, 0, 0, 0.2);'
+  small: '0 2px 13px -3px rgba(0, 0, 0, 0.2);',
+  medium: '0 2px 13px -3px rgba(0, 0, 0, 0.3);',
+  large: '0 2px 13px -3px rgba(0, 0, 0, 0.4);'
 }
 const theme = {
   color,

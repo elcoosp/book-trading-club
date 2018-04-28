@@ -2,7 +2,8 @@ import { gql } from 'apollo-boost'
 import { graphql } from 'react-apollo'
 import React, { Component } from 'react'
 import { notEmpty } from '../utils'
-
+import { Title, Button, Main } from '../ui/Common'
+import { Form } from '../ui/Form'
 const ADD_BOOK = gql`
   mutation addBook($title: String!, $author: String!) {
     addBook(title: $title, author: $author) {
@@ -44,23 +45,26 @@ class NewBook extends Component {
     const { title, author } = this.state
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <label htmlFor="title">Title</label>
-        <input
-          name="title"
-          type="text"
-          value={title}
-          onChange={this.onChange}
-        />
-        <label htmlFor="author">Author</label>
-        <input
-          name="author"
-          type="text"
-          value={author}
-          onChange={this.onChange}
-        />
-        <button type="submit">Add a book</button>
-      </form>
+      <Main>
+        <Title>Add a new book</Title>
+        <Form onSubmit={this.onSubmit}>
+          <label htmlFor="title">Title</label>
+          <input
+            name="title"
+            type="text"
+            value={title}
+            onChange={this.onChange}
+          />
+          <label htmlFor="author">Author</label>
+          <input
+            name="author"
+            type="text"
+            value={author}
+            onChange={this.onChange}
+          />
+          <Button type="submit">Add a book</Button>
+        </Form>
+      </Main>
     )
   }
 }
