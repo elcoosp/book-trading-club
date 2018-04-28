@@ -3,11 +3,15 @@ import { Query } from 'react-apollo'
 import React, { Component } from 'react'
 
 const GET_TRADES = gql`
-  query books {
-    books {
-      _id
-      title
-      author
+  query trades {
+    user {
+      requestedTrades {
+        accepted
+        book {
+          title
+          author
+        }
+      }
     }
   }
 `

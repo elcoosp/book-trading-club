@@ -21,7 +21,7 @@ type Trade {
   _id: ID!
   book: Book!
   requester: User!
-  accepted: Boolean!
+  accepted: Boolean
 }
 
 type JwtPayload {
@@ -31,6 +31,7 @@ type JwtPayload {
 type Query {
   books(id: String): [Book!]!
   user: User
+  trades: User
 }
 
 type Mutation {
