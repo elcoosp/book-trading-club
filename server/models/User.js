@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const deepPopulate = require('mongoose-deep-populate')(mongoose)
 const to = require('await-to-js').to
 const Schema = mongoose.Schema
 const bcrypt = require('bcrypt')
@@ -13,6 +14,8 @@ const User = new Schema({
   requestedTrades: [{ type: Schema.Types.ObjectId, ref: 'Trade' }],
   acceptedTrades: [{ type: Schema.Types.ObjectId, ref: 'Trade' }]
 })
+
+User.plugin(deepPopulate)
 
 User.pre('save', async function(next) {
   if (this.isModified('password')) {

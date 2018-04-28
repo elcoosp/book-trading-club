@@ -18,23 +18,15 @@ const resolvers = {
     },
 
     user: withAuth(async (obj, { id }, ctx, info) => {
-      const deepPopulate = fields => initAcc => {
-        const fieldPopulate = {
-          path: 'friends',
-          populate: { path: 'friends' }
-        }
-        // WIPPPPPP
-        console.log(fields.map(s => s.split('.').filter(arr => arr[0])))
-      }
       const fields = getFieldNames(info)
-      const [e, user] = await to(
-        deepPopulate(fields)(User.findById(ctx.user._id)).exec()
-      )
+        .filter(s => !s.includes('__typename'))
+        .join(' ')
 
-      console.log(fields)
+      const [e, user] = await to(User.findById(ctx.user._id))
+      const [err, populatedUser] = await to(user.deepPopulate(fields))
 
-      if (e) throw new Error('Could not get user')
-      return user.toObject()
+      if (e || err) throw new Error('Could not get user')
+      return populatedUser.toObject()
     })
   },
   Mutation: {
@@ -93,6 +85,15 @@ const resolvers = {
           .save()
           .then(doc => doc.populate('requester book').execPopulate())
       )
+
+      const [userError, userSaved] = await to(
+        User.findByIdAndUpdate(
+          ctx.user._id,
+          { $push: { requestedTrades: trade._id } },
+          { new: true }
+        )
+      )
+
       if (e) throw new Error('Could not request trade')
       return trade.toObject()
     }),
