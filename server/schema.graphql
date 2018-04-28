@@ -43,7 +43,7 @@ type Mutation {
     city: String
     state: String
   ): User!
-  requestTrade(book: ID!): Trade!
-  acceptTrade(trade: ID!): Trade!
+  requestTrade(book: String!): Trade!
+  acceptTrade(trade: String!): Trade!
   login(pseudo: String!, password: String!): JwtPayload
 }
