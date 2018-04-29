@@ -7,6 +7,13 @@ import { Title, ButtonLink, Button, Main } from '../ui/Common'
 
 const GET_BOOKS = gql`
   query {
+    user {
+      requestedTrades {
+        book {
+          _id
+        }
+      }
+    }
     books {
       _id
       title
@@ -38,7 +45,7 @@ export default class Books extends Component {
         <ButtonLink to="/books/new">Add a new book</ButtonLink>
         <QueryLoaderError
           query={GET_BOOKS}
-          finalComp={({ books }) => (
+          finalComp={({ books, user }) => (
             <Mutation mutation={REQUEST_TRADE}>
               {(requestTrade, data) => (
                 <ul>
@@ -49,36 +56,41 @@ export default class Books extends Component {
                     <p>{this.state.requestTrade.success}</p>
                   )}
 
-                  {books.map(({ title, author, _id }) => (
-                    <li key={_id}>
-                      <h1>{title}</h1>
-                      <h2>{author}</h2>
-
-                      <Button
-                        secondary
-                        onClick={() =>
-                          requestTrade({ variables: { bookId: _id } })
-                            .then(data =>
-                              this.setState(prevState => ({
-                                requestTrade: {
-                                  success: `${title} was successfully requested`
-                                }
-                              }))
-                            )
-                            .catch(e =>
-                              this.setState(prevState => ({
-                                requestTrade: {
-                                  error:
-                                    'Could not request trade, an error  occured'
-                                }
-                              }))
-                            )
-                        }
-                      >
-                        Request Trade
-                      </Button>
-                    </li>
-                  ))}
+                  {books.map(({ title, author, _id }) => {
+                    return (
+                      <li key={_id}>
+                        <h1>{title}</h1>
+                        <h2>{author}</h2>
+                        {!user.requestedTrades.some(
+                          trade => trade.book._id === _id
+                        ) && (
+                          <Button
+                            secondary
+                            onClick={() =>
+                              requestTrade({ variables: { bookId: _id } })
+                                .then(data =>
+                                  this.setState(prevState => ({
+                                    requestTrade: {
+                                      success: `${title} was successfully requested`
+                                    }
+                                  }))
+                                )
+                                .catch(e =>
+                                  this.setState(prevState => ({
+                                    requestTrade: {
+                                      error:
+                                        'Could not request trade, an error  occured'
+                                    }
+                                  }))
+                                )
+                            }
+                          >
+                            Request Trade
+                          </Button>
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
               )}
             </Mutation>
