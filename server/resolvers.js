@@ -70,10 +70,13 @@ const resolvers = {
         User.findOne({ pseudo: args.pseudo }),
         User.findById(ctx.user._id)
       ]).then(async ([pseudoAlreadyUsed, user]) => {
-        if (pseudoAlreadyUsed && pseudoAlreadyUsed._id.equals(user._id)) {
+        if (
+          !pseudoAlreadyUsed ||
+          (pseudoAlreadyUsed && pseudoAlreadyUsed._id.equals(user._id))
+        ) {
           user.set(args)
           const [saveError, updatedUser] = await to(user.save())
-          if (e || saveError) throw new Error('Could not update user')
+          if (saveError) throw new Error('Could not update user')
           return without`password`(updatedUser.toObject())
         } else throw new Error('Pseudo already used')
       })
