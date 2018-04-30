@@ -8,6 +8,9 @@ import { Title, ButtonLink, Button, Main } from '../ui/Common'
 const GET_BOOKS = gql`
   query {
     user {
+      books {
+        _id
+      }
       requestedTrades {
         book {
           _id

@@ -14,7 +14,7 @@ type User {
   city: String
   state: String
   requestedTrades: [Trade!]!
-  acceptedTrades: [Trade!]!
+  waitingTrades: [Trade!]!
 }
 
 type Trade {

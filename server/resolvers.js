@@ -24,6 +24,7 @@ const resolvers = {
 
       const [e, user] = await to(User.findById(ctx.user._id))
       const [err, populatedUser] = await to(user.deepPopulate(fields))
+      console.log(populatedUser)
 
       if (e || err) throw new Error('Could not get user')
       return populatedUser.toObject()
@@ -83,22 +84,26 @@ const resolvers = {
     }),
 
     requestTrade: withAuth(async (obj, { book }, ctx, info) => {
-      const [e, trade] = await to(
-        new Trade({ book, requester: ctx.user._id })
+      try {
+        const trade = await new Trade({ book, requester: ctx.user._id })
           .save()
           .then(doc => doc.populate('requester book').execPopulate())
-      )
 
-      const [userError, userSaved] = await to(
-        User.findByIdAndUpdate(
+        const userSaved = await User.findByIdAndUpdate(
           ctx.user._id,
           { $push: { requestedTrades: trade._id } },
           { new: true }
         )
-      )
 
-      if (e) throw new Error('Could not request trade')
-      return trade.toObject()
+        const bookFetched = await Book.findById(book).populate('owner', '_id')
+
+        const ownerFetched = await User.findById(bookFetched.owner._id)
+        ownerFetched.waitingTrades.push(bookFetched._id)
+        const ownerSaved = await ownerFetched.save()
+        return trade.toObject()
+      } catch (e) {
+        throw new Error('Could not request trade')
+      }
     }),
 
     acceptTrade: withAuth(async (obj, { trade }, ctx, info) => {

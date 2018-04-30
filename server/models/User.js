@@ -12,7 +12,7 @@ const User = new Schema({
   city: String,
   state: String,
   requestedTrades: [{ type: Schema.Types.ObjectId, ref: 'Trade' }],
-  acceptedTrades: [{ type: Schema.Types.ObjectId, ref: 'Trade' }]
+  waitingTrades: [{ type: Schema.Types.ObjectId, ref: 'Trade' }]
 })
 
 User.plugin(deepPopulate)
