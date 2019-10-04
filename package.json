@@ -23,7 +23,7 @@
     "express-sanitizer": "1.0.3",
     "graphql-list-fields": "^2.0.2",
     "graphql-yoga": "^1.8.5",
-    "helmet": "3.12.0",
+    "helmet": "3.21.1",
     "hoek": "^5.0.3",
     "jsonwebtoken": "^8.2.1",
     "mongoose": "5.0.12",
