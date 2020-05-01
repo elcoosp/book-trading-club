@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node ./server/index.js",
     "dev": "nodemon ./server/index.js",
-    "test": "jest --watch"
+    "test": "jest --watch",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "keywords": [
     "javascript"
@@ -27,10 +29,12 @@
     "hoek": "^5.0.3",
     "jsonwebtoken": "^8.2.1",
     "mongoose": "5.0.12",
-    "mongoose-deep-populate": "^3.1.1"
+    "mongoose-deep-populate": "^3.1.1",
+    "snyk": "^1.316.2"
   },
   "devDependencies": {
     "jest": "^22.4.3",
     "nodemon": "^1.17.3"
-  }
+  },
+  "snyk": true
 }
